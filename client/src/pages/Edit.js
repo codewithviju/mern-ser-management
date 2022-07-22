@@ -1,15 +1,28 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createNewUser, fetchAllUsers } from "../redux/reducers/userReducer";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import {
+  createNewUser,
+  getSingleUser,
+  fetchAllUsers,
+  updateUser,
+} from "../redux/reducers/userReducer";
 import { useNavigate } from "react-router-dom";
-const Register = () => {
+const Edit = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(getSingleUser(id));
+  }, []);
+
+  const { user } = useSelector((state) => state.users);
+  console.log(user);
   const [inputs, setInputs] = useState({
-    name: "",
-    email: "",
-    gender: "",
-    phone: "",
+    name: user.name,
+    email: user.email,
+    gender: user.gender,
+    phone: user.phone,
   });
 
   const [file, setFile] = useState();
@@ -25,8 +38,8 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createNewUser(formData));
-
+    dispatch(updateUser({ id, formData }));
+    dispatch(fetchAllUsers());
     navigate("/");
   };
 
@@ -35,12 +48,13 @@ const Register = () => {
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-            <h1>Welcome To User Management system</h1>
+            <h1>Edit</h1>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
               <div className="form-group">
                 <label htmlFor="name">Name</label>
                 <input
                   type="text"
+                  value={inputs.name}
                   onChange={(e) =>
                     setInputs({ ...inputs, [e.target.name]: e.target.value })
                   }
@@ -57,6 +71,7 @@ const Register = () => {
                     setInputs({ ...inputs, [e.target.name]: e.target.value })
                   }
                   name="email"
+                  value={inputs.email}
                   id="email"
                   className="form-control"
                 />
@@ -100,6 +115,7 @@ const Register = () => {
                 <input
                   type="number"
                   name="phone"
+                  value={inputs.phone}
                   onChange={(e) =>
                     setInputs({ ...inputs, [e.target.name]: e.target.value })
                   }
@@ -125,6 +141,7 @@ const Register = () => {
                   type="submit"
                   name=""
                   id=""
+                  value={"Submit"}
                   className="btn btn-primary"
                 />
               </div>
@@ -136,4 +153,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Edit;

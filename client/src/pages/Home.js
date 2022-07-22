@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, fetchAllUsers } from "../redux/reducers/userReducer";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 
-console.log(moment);
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ const Home = () => {
   if (loading) {
     return <h1>Loading</h1>;
   }
-  console.log(users);
+
   return (
     <>
       <div className="container mt-4">
@@ -40,6 +39,7 @@ const Home = () => {
                   <th>Phone</th>
                   <th>Created</th>
                   <th>Profile</th>
+                  <th>Edit</th>
                   <th>Delete</th>
                 </tr>
               </thead>
@@ -47,7 +47,7 @@ const Home = () => {
                 {users &&
                   users.map((item) => {
                     return (
-                      <tr>
+                      <tr key={item._id}>
                         <td>{item.name}</td>
                         <td>{item.email}</td>
                         <td>{item.gender}</td>
@@ -59,6 +59,11 @@ const Home = () => {
                             height="100px"
                             width={"100px"}
                           />
+                        </td>
+                        <td>
+                          <Link to={`/edit/${item._id}`}>
+                            <button className="btn btn-info">Edit</button>
+                          </Link>
                         </td>
                         <td>
                           <button

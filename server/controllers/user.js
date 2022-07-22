@@ -35,7 +35,21 @@ class userController {
       return res.json({ message: error.message });
     }
   };
-  static updateUser = async (req, res) => {};
+  static updateUser = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const updatedUser = await userModel.findByIdAndUpdate(id, req.body);
+
+      if (updatedUser) {
+        return res.status(200).json({ message: "Updated" });
+      } else {
+        return res.status(200).json({ message: "Something wrong happen" });
+      }
+    } catch (error) {
+      return res.json({ message: error.message });
+    }
+  };
   static deleteUser = async (req, res) => {
     const { id } = req.params;
 
@@ -51,6 +65,21 @@ class userController {
       }
       if (deletedUser) {
         return res.json({ message: "user Deleted" });
+      }
+    } catch (error) {
+      return res.json({ message: error.message });
+    }
+  };
+
+  static getsingleUser = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+    try {
+      const getsingleUser = await userModel.findById(id);
+      if (getsingleUser) {
+        return res.send(getsingleUser);
+      } else {
+        return res.json({ message: "something went wrong" });
       }
     } catch (error) {
       return res.json({ message: error.message });
